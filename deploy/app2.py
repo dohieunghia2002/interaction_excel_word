@@ -37,13 +37,21 @@ else:
         with col1:
             target_sheet = st.text_input("Tên sheet của file đích", value='T07.24')
         with col2:
-            src_col = st.text_input("Tên cột của file nguồn (A, B, C, ...)", value='B')  # Cột để tìm kiếm trong file nguồn
+            src_col = st.text_input("Tên cột của file nguồn (A, B, C, ...)", value='B>J')  # Cột để tìm kiếm trong file nguồn
         with col3:
-            target_col = st.text_input("Tên cột của file đích (A, B, C, ...)", value='D')  # Cột cần kiểm tra trong file đích
+            target_col = st.text_input("Tên cột của file đích (A, B, C, ...)", value='D>G')  # Cột cần kiểm tra trong file đích
         
+        temp = src_col.split('>')
+        src_col = temp[0]
+        value_of_src_col = temp[1]
+        temp = target_col.split('>')
+        target_col = temp[0]
+        value_of_target_col = temp[1]
+        del temp
+
         # Các giá trị mặc định của nợ 702 và 704
-        default_702_values = ['- 702016', '+ 790005', '+ 790006', '+ 711026', '-711052', '+ 719009']
-        default_704_values = ['+ 714009', '- 702010']
+        default_702_values = ['453101', '702', '- 702016', '+ 790005', '+ 790006', '+ 711026', '-711052', '+ 719009']
+        default_704_values = ['+ 704', '+ 714009', '- 702010']
 
         # Nhập các giá trị cần tìm của nợ 702 và nợ 704
         user_input_702 = st.text_area("Nhập các giá trị cần tìm của nợ 702, mỗi giá trị trên một dòng", value="\n".join(default_702_values))
@@ -81,7 +89,7 @@ else:
             positions_in_target.append(position[0] if position else None)
 
         # Lấy giá trị từ cột J trong file nguồn
-        src_col_j_idx = ord('J') - ord('A')  # Cột J trong file nguồn
+        src_col_j_idx = ord(value_of_src_col) - ord('A')  # Cột J trong file nguồn
         values_in_col_j = []
         for pos in positions_in_src:
             if pos is not None:
@@ -90,7 +98,7 @@ else:
                 values_in_col_j.append(None)
 
         # Cập nhật giá trị vào cột G trong file đích chỉ nếu có giá trị hợp lệ trong file nguồn
-        target_col_g_idx = ord('G') - ord('A')  # Cột G trong file đích
+        target_col_g_idx = ord(value_of_target_col) - ord('A')  # Cột G trong file đích
         for i, pos in enumerate(positions_in_target):
             if positions_in_src[i] is not None:  # Chỉ cập nhật nếu có vị trí hợp lệ trong file nguồn
                 if pos is not None:
